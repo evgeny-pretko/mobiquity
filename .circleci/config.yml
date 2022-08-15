@@ -11,8 +11,11 @@ jobs:
           name: Test
           command: mvn clean test
       - run:
-          name: Report
+          name: Allure Report
           command: mvn allure:report
+      - store_artifacts:
+          path: target/site/allure-maven-plugin
+          destination: allure
 
 workflows:
   test-assignment:
