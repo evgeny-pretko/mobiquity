@@ -1,3 +1,4 @@
+import io.qameta.allure.Description;
 import io.restassured.http.ContentType;
 import models.UserResponse;
 import org.testng.annotations.Test;
@@ -12,6 +13,8 @@ import static org.apache.http.HttpStatus.SC_OK;
 public class EmailTest {
 
     @Test
+    @Description("Search for the user with username 'Delphine'. Search for the posts written by the user. " +
+            "For each post, fetch the comments and validate if the emails in the comment section are in the proper format.")
     public void evgTest() {
         SoftAssert soft = new SoftAssert();
 
