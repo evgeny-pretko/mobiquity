@@ -13,5 +13,6 @@ public interface ConfigProvider {
                 : ConfigFactory.load("application.conf");
     }
 
-    String BASE_URL = readConfig().getString("url");
+    String BASE_URL = readConfig().getString("urls.base");
+    Integer RETRY_MAX = readConfig().getInt("settings.retry.attempts");
 }

@@ -3,7 +3,6 @@ package api;
 import api.objects.UserPojo;
 import api.specs.BaseSpecs;
 
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
