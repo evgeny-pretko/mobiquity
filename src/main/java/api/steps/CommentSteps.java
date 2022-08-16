@@ -2,12 +2,19 @@ package api.steps;
 
 import api.objects.CommentPojo;
 import api.specs.BaseSpecs;
+import io.restassured.response.Response;
 
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
 public class CommentSteps {
+
+    public static Response getAllCommentsResponse() {
+        return given().spec(BaseSpecs.requestSpec())
+                .get("/comments")
+                .then().extract().response();
+    }
 
     public static List<CommentPojo> getCommentsByPostId(int postId) {
         return given().spec(BaseSpecs.requestSpec())

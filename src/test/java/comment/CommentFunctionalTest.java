@@ -7,6 +7,7 @@ import api.objects.CommentPojo;
 import api.objects.PostPojo;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
+import io.restassured.response.Response;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
@@ -18,6 +19,7 @@ import utils.FailedTestRepeater;
 import java.util.Arrays;
 import java.util.List;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -30,7 +32,14 @@ public class CommentFunctionalTest {
         Arrays.stream(context.getAllTestMethods()).forEach(x -> x.setRetryAnalyzerClass(FailedTestRepeater.class));
     }
 
-    @Test(groups = "workflow")
+    @Test(groups = "contract")
+    public void testContract() {
+        Response response = CommentSteps.getAllCommentsResponse();
+
+        response.then().body(matchesJsonSchemaInClasspath("schemas/comment_schema.json"));
+    }
+
+    @Test(groups = "workflow", dependsOnGroups = "contract")
     @Description("Search for the user with username 'Delphine'. Search for the posts written by the user. " +
             "For each post, fetch the comments and validate if the emails in the comment section are in the proper format.")
     public void testEmailFormatForCommentsToAllPostsOfSpecifiedUser() {
@@ -50,7 +59,7 @@ public class CommentFunctionalTest {
         softAssert.assertAll();
     }
 
-    @Test(groups = "functional")
+    @Test(groups = "functional", dependsOnGroups = "contract")
     public void testCreateCommentWithoutEmail() {
         CommentPojo request = CommentGenerator.getSimpleComment();
         CommentPojo response = CommentSteps.createComment(request);
@@ -60,7 +69,7 @@ public class CommentFunctionalTest {
         assertEquals(501, response.getId());
     }
 
-    @Test(groups = "functional")
+    @Test(groups = "functional", dependsOnGroups = "contract")
     public void testDeleteCommentById() {
         CommentSteps.deleteCommentById(1);
         CommentPojo response = CommentSteps.getCommentById(1);
