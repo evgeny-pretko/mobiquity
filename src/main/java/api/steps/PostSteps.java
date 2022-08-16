@@ -1,4 +1,4 @@
-package api;
+package api.steps;
 
 import api.objects.PostPojo;
 import api.specs.BaseSpecs;
@@ -7,7 +7,7 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 
-public class PostApi {
+public class PostSteps {
 
     public static List<PostPojo> getPostsByUserId(int userId) {
         return given().spec(BaseSpecs.requestSpec())

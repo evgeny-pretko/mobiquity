@@ -1,4 +1,4 @@
-package api;
+package api.steps;
 
 import api.objects.UserPojo;
 import api.specs.BaseSpecs;
@@ -6,7 +6,7 @@ import api.specs.BaseSpecs;
 
 import static io.restassured.RestAssured.given;
 
-public class UserApi {
+public class UserSteps {
 
     public static int getUserIdByUsername(String username) {
         UserPojo user = given()
