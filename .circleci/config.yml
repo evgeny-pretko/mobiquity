@@ -9,10 +9,9 @@ jobs:
       - checkout
       - run:
           name: Test
-          command: mvn clean test
-      - run:
-          name: Allure Report
-          command: mvn allure:report
+          command: |
+            mvn clean test
+            mvn allure:report
       - store_artifacts:
           path: target/site/allure-maven-plugin
           destination: allure
