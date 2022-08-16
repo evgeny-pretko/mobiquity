@@ -10,6 +10,7 @@ import io.qameta.allure.Feature;
 import io.restassured.response.Response;
 import org.testng.ITestContext;
 import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import utils.CommentGenerator;
@@ -25,7 +26,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 @Feature("Comment")
-public class CommentFunctionalTest {
+public class CommentTest {
 
     @BeforeSuite
     public void setUp(ITestContext context) {
@@ -40,12 +41,13 @@ public class CommentFunctionalTest {
     }
 
     @Test(groups = "workflow", dependsOnGroups = "contract")
+    @Parameters("username")
     @Description("Search for the user with username 'Delphine'. Search for the posts written by the user. " +
             "For each post, fetch the comments and validate if the emails in the comment section are in the proper format.")
-    public void testEmailFormatForCommentsToAllPostsOfSpecifiedUser() {
+    public void testEmailFormatForCommentsToAllPostsOfSpecifiedUser(String username) {
         SoftAssert softAssert = new SoftAssert();
 
-        int userId = UserSteps.getUserIdByUsername("Delphine");
+        int userId = UserSteps.getUserIdByUsername(username);
         List<PostPojo> posts = PostSteps.getPostsByUserId(userId);
 
         for (PostPojo post: posts) {
@@ -60,8 +62,19 @@ public class CommentFunctionalTest {
     }
 
     @Test(groups = "functional", dependsOnGroups = "contract")
-    public void testCreateCommentWithoutEmail() {
+    public void testCreateCommentWithAllFields() {
         CommentPojo request = CommentGenerator.getSimpleComment();
+        CommentPojo response = CommentSteps.createComment(request);
+
+        assertNotNull(response.getEmail());
+        assertNotNull(response.getName());
+        assertNotNull(response.getBody());
+        assertEquals(501, response.getId());
+    }
+
+    @Test(groups = "functional", dependsOnGroups = "contract")
+    public void testCreateCommentWithoutEmail() {
+        CommentPojo request = CommentGenerator.getCommentWithoutEmail();
         CommentPojo response = CommentSteps.createComment(request);
 
         assertNotNull(response);
@@ -71,11 +84,9 @@ public class CommentFunctionalTest {
 
     @Test(groups = "functional", dependsOnGroups = "contract")
     public void testDeleteCommentById() {
-        CommentSteps.deleteCommentById(1);
-        CommentPojo response = CommentSteps.getCommentById(1);
+        Response response = CommentSteps.deleteCommentById(1);
 
-        assertNull(response.getName());
+        assertEquals(200, response.getStatusCode());
     }
-
 
 }

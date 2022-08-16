@@ -37,10 +37,11 @@ public class CommentSteps {
                 .as(CommentPojo.class);
     }
 
-    public static void deleteCommentById(int id) {
-        given().spec(BaseSpecs.requestSpec())
+    public static Response deleteCommentById(int id) {
+        return given().spec(BaseSpecs.requestSpec())
                 .pathParam("id", id)
-                .delete("/comments/{id}");
+                .delete("/comments/{id}")
+                .then().extract().response();
     }
 
 }

@@ -1,6 +1,14 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="Suite with all tests for Comment feature" verbose="2">
-    <test name="All tests for Comment feature">
+    <test name="All tests for Comment feature" parallel="methods" thread-count="2">
+        <parameter name="username" value="Delphine"/>
+        <groups>
+            <run>
+                <include name="contract" />
+                <include name="functional" />
+                <include name="workflow" />
+            </run>
+        </groups>
         <packages>
             <package name="comment.*" />
         </packages>
